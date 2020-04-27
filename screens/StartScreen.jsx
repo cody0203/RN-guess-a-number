@@ -12,6 +12,8 @@ import {
 import Card from '../components/Card';
 import Input from '../components/Input';
 import NumberContainer from '../components/NumberContainer';
+import MainButton from '../components/MainButton';
+import SecondaryButton from '../components/SecondaryButton';
 
 import theme from '../constants/color';
 import defaultStyles from '../constants/default-styles';
@@ -60,8 +62,7 @@ const Start = ({ startGameHandler }) => {
         <Text style={defaultStyles.title}>Selected number:</Text>
 
         <NumberContainer number={selectedNumber} />
-
-        <Button
+        <MainButton
           title="START GAME"
           onPress={() => startGameHandler(selectedNumber)}
         />
@@ -88,18 +89,10 @@ const Start = ({ startGameHandler }) => {
 
           <View style={styles.buttons}>
             <View style={styles.button}>
-              <Button
-                title="Reset"
-                color={theme.secondary}
-                onPress={resetInputHandler}
-              />
+              <SecondaryButton title="Reset" onPress={resetInputHandler} />
             </View>
             <View style={styles.button}>
-              <Button
-                title="Confirm"
-                color={theme.primary}
-                onPress={confirmInputHandler}
-              />
+              <MainButton title="Confirm" onPress={confirmInputHandler} />
             </View>
           </View>
         </Card>
@@ -128,10 +121,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'space-between',
+    marginTop: 24,
   },
-  button: {
-    width: 100,
-  },
+
   confirmedOutputContainer: {
     alignItems: 'center',
     justifyContent: 'center',
