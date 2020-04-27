@@ -7,6 +7,7 @@ import {
   Alert,
   ScrollView,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -32,6 +33,9 @@ const GameScreen = ({ userChosen, gameOverHandler }) => {
   const initialGuess = generateRandomBetween(1, 100, userChosen);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [pastGuesses, setPassGuesses] = useState([initialGuess.toString()]);
+  const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+    Dimensions.get('window').height
+  );
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
@@ -40,6 +44,16 @@ const GameScreen = ({ userChosen, gameOverHandler }) => {
       gameOverHandler(pastGuesses.length);
     }
   }, [currentGuess, pastGuesses, userChosen]);
+
+  useEffect(() => {
+    const updateLayout = () =>
+      setAvailableDeviceHeight(Dimensions.get('window').height);
+
+    Dimensions.addEventListener('change', updateLayout);
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    };
+  });
 
   const nextGuessHandler = (direction) => {
     if (
@@ -70,6 +84,39 @@ const GameScreen = ({ userChosen, gameOverHandler }) => {
     ]);
   };
 
+  if (availableDeviceHeight < 500) {
+    return (
+      <View style={styles.screen}>
+        <Text style={defaultStyles.title}>Opponent's Guess</Text>
+        <View style={styles.control}>
+          <MainButton
+            title={<Ionicons name="ios-arrow-down" size={24} color="white" />}
+            onPress={nextGuessHandler.bind(this, 'lower')}
+          />
+          <NumberContainer number={currentGuess} />
+          <MainButton
+            title={<Ionicons name="ios-arrow-up" size={24} color="white" />}
+            onPress={nextGuessHandler.bind(this, 'greater')}
+          />
+        </View>
+        <View style={styles.listContainer}>
+          <FlatList
+            keyExtractor={(item) => item}
+            data={pastGuesses}
+            renderItem={(itemData) => (
+              <View style={styles.listItem}>
+                <Text style={defaultStyles.bodyText}>
+                  #{pastGuesses.length - itemData.index}
+                </Text>
+                <Text style={defaultStyles.bodyText}>{itemData.item}</Text>
+              </View>
+            )}
+            contentContainerStyle={styles.list}
+          />
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.screen}>
       <Text style={defaultStyles.title}>Opponent's Guess</Text>
@@ -87,16 +134,6 @@ const GameScreen = ({ userChosen, gameOverHandler }) => {
       </Card>
 
       <View style={styles.listContainer}>
-        {/* <ScrollView >
-          {pastGuesses.map((pastGuess, index) => (
-            <View style={styles.listItem} key={index}>
-              <Text style={defaultStyles.bodyText}>
-                #{pastGuesses.length - index + 1}
-              </Text>
-              <Text style={defaultStyles.bodyText}>{pastGuess}</Text>
-            </View>
-          ))}
-        </ScrollView> */}
         <FlatList
           keyExtractor={(item) => item}
           data={pastGuesses}
@@ -128,19 +165,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  control: {
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
   listContainer: { flex: 1, width: '60%' },
   list: {
     flexGrow: 1,
     justifyContent: 'flex-end',
   },
   listItem: {
-    paddingVertical: 16,
+    paddingVertical: Dimensions.get('window').height > 600 ? 16 : 10,
     paddingHorizontal: 24,
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.65)',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 16,
+    marginVertical: Dimensions.get('window').height > 600 ? 16 : 8,
     width: '100%',
   },
 });

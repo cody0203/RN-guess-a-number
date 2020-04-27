@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
 import theme from '../constants/color';
 
@@ -16,8 +22,8 @@ const MainButton = ({ title, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingVertical: Dimensions.get('window').height > 600 ? 14 : 8,
+    paddingHorizontal: Dimensions.get('window').height > 600 ? 30 : 15,
     borderRadius: 4,
     backgroundColor: theme.primary,
   },

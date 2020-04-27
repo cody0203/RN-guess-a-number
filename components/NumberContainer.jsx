@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
 import theme from '../constants/color';
 import defaultStyles from '../constants/default-styles';
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 16,
+    marginVertical: Dimensions.get('window').height > 600 ? 16 : 8,
   },
   number: {
     color: theme.primary,
