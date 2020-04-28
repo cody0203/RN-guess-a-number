@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 
 import MainButton from '../components/MainButton';
